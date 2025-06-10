@@ -77,14 +77,11 @@ const recommendationText = document.getElementById('recommendationText');
 const toggleTipsBtn = document.getElementById('toggleTipsBtn');
 const aiTipsDiv = document.getElementById('aiTips');
 const tipsList = document.getElementById('tipsList');
-const calendar = document.getElementById('calendar');
-const exportPdfBtn = document.getElementById('exportPdfBtn');
 
 // Event Listeners
 industrySelect.addEventListener('change', handleIndustryChange);
-generateBtn.addEventListener('click', generateCalendar);
+generateBtn.addEventListener('click', generateRecommendation);
 toggleTipsBtn.addEventListener('click', toggleTips);
-exportPdfBtn.addEventListener('click', exportToPDF);
 
 // Handle industry selection change
 function handleIndustryChange() {
@@ -95,8 +92,8 @@ function handleIndustryChange() {
     }
 }
 
-// Generate calendar based on inputs
-function generateCalendar() {
+// Generate recommendation based on inputs
+function generateRecommendation() {
     const industry = industrySelect.value === 'other' ? customIndustry.value.toLowerCase() : industrySelect.value;
     const currentCadence = cadenceSelect.value;
 
@@ -115,18 +112,15 @@ function generateCalendar() {
     results.classList.remove('hidden');
 
     // Generate recommendation
-    const recommendation = generateRecommendation(industryInfo, currentCadence);
+    const recommendation = generateRecommendationText(industryInfo, currentCadence);
     recommendationText.textContent = recommendation;
 
     // Generate AI tips
     generateAITips(industryInfo.volatility);
-
-    // Generate calendar
-    generateCalendarView(industryInfo.recommendedCadence);
 }
 
 // Generate recommendation text
-function generateRecommendation(industryInfo, currentCadence) {
+function generateRecommendationText(industryInfo, currentCadence) {
     const cadenceMap = {
         weekly: 'weekly',
         biweekly: 'every two weeks',
@@ -154,100 +148,4 @@ function generateAITips(volatility) {
 // Toggle AI tips visibility
 function toggleTips() {
     aiTipsDiv.classList.toggle('hidden');
-}
-
-// Generate calendar view
-function generateCalendarView(recommendedCadence) {
-    const today = new Date();
-    
-    // Create calendar HTML
-    let calendarHTML = '<div class="calendar-grid">';
-    calendarHTML += generateMonthView(today, recommendedCadence);
-    calendarHTML += '</div>';
-    calendar.innerHTML = calendarHTML;
-}
-
-// Generate month view
-function generateMonthView(date, recommendedCadence) {
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                       'July', 'August', 'September', 'October', 'November', 'December'];
-    
-    let html = `
-        <div class="month">
-            <h3>${monthNames[date.getMonth()]} ${date.getFullYear()}</h3>
-            <div class="days">
-                <div class="day-header">Sun</div>
-                <div class="day-header">Mon</div>
-                <div class="day-header">Tue</div>
-                <div class="day-header">Wed</div>
-                <div class="day-header">Thu</div>
-                <div class="day-header">Fri</div>
-                <div class="day-header">Sat</div>
-    `;
-
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    
-    // Add empty cells for days before the first day of the month
-    for (let i = 0; i < firstDay.getDay(); i++) {
-        html += '<div class="day empty"></div>';
-    }
-
-    // Add days of the month
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-        const currentDate = new Date(date.getFullYear(), date.getMonth(), day);
-        const isUpdateDay = isRecommendedUpdateDay(currentDate, recommendedCadence);
-        
-        html += `
-            <div class="day ${isUpdateDay ? 'update-day' : ''}">
-                ${day}
-                ${isUpdateDay ? '<span class="update-marker">Update</span>' : ''}
-            </div>
-        `;
-    }
-
-    html += '</div></div>';
-    return html;
-}
-
-// Check if a date is a recommended update day
-function isRecommendedUpdateDay(date, recommendedCadence) {
-    const day = date.getDay();
-    const weekNumber = Math.floor((date.getDate() - 1) / 7);
-
-    switch (recommendedCadence) {
-        case 'weekly':
-            return day === 2; // Tuesday
-        case 'biweekly':
-            return day === 2 && weekNumber % 2 === 0; // Every other Tuesday
-        case 'monthly':
-            return date.getDate() === 15; // 15th of each month
-        case 'quarterly':
-            return date.getDate() === 1 && date.getMonth() % 3 === 0; // First day of each quarter
-        default:
-            return false;
-    }
-}
-
-// Export calendar to PDF
-function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // Add title
-    doc.setFontSize(20);
-    doc.text('Content Update Calendar', 20, 20);
-    
-    // Add recommendation
-    doc.setFontSize(12);
-    doc.text(recommendationText.textContent, 20, 30, { maxWidth: 170 });
-    
-    // Add calendar
-    // Note: This is a simplified version. For a full implementation,
-    // you would need to use html2canvas or similar to capture the calendar view
-    doc.setFontSize(10);
-    doc.text('Calendar view would be rendered here', 20, 50);
-    
-    // Save the PDF
-    doc.save('content-calendar.pdf');
 } 
