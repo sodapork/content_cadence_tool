@@ -78,15 +78,12 @@ const toggleTipsBtn = document.getElementById('toggleTipsBtn');
 const aiTipsDiv = document.getElementById('aiTips');
 const tipsList = document.getElementById('tipsList');
 const calendar = document.getElementById('calendar');
-const embedCode = document.getElementById('embedCode');
-const copyCodeBtn = document.getElementById('copyCodeBtn');
 const exportPdfBtn = document.getElementById('exportPdfBtn');
 
 // Event Listeners
 industrySelect.addEventListener('change', handleIndustryChange);
 generateBtn.addEventListener('click', generateCalendar);
 toggleTipsBtn.addEventListener('click', toggleTips);
-copyCodeBtn.addEventListener('click', copyEmbedCode);
 exportPdfBtn.addEventListener('click', exportToPDF);
 
 // Handle industry selection change
@@ -126,9 +123,6 @@ function generateCalendar() {
 
     // Generate calendar
     generateCalendarView(industryInfo.recommendedCadence);
-
-    // Generate embed code
-    generateEmbedCode(industry);
 }
 
 // Generate recommendation text
@@ -165,21 +159,10 @@ function toggleTips() {
 // Generate calendar view
 function generateCalendarView(recommendedCadence) {
     const today = new Date();
-    const months = [];
     
-    // Generate 3 months of dates
-    for (let i = 0; i < 3; i++) {
-        const month = new Date(today.getFullYear(), today.getMonth() + i, 1);
-        months.push(month);
-    }
-
     // Create calendar HTML
     let calendarHTML = '<div class="calendar-grid">';
-    
-    months.forEach(month => {
-        calendarHTML += generateMonthView(month, recommendedCadence);
-    });
-
+    calendarHTML += generateMonthView(today, recommendedCadence);
     calendarHTML += '</div>';
     calendar.innerHTML = calendarHTML;
 }
@@ -244,24 +227,6 @@ function isRecommendedUpdateDay(date, recommendedCadence) {
         default:
             return false;
     }
-}
-
-// Generate embed code
-function generateEmbedCode(industry) {
-    const code = `<iframe src="https://sodapork.github.io/content_cadence_tool?industry=${industry}" width="100%" height="400"></iframe>`;
-    embedCode.textContent = code;
-}
-
-// Copy embed code to clipboard
-function copyEmbedCode() {
-    const code = embedCode.textContent;
-    navigator.clipboard.writeText(code).then(() => {
-        const originalText = copyCodeBtn.textContent;
-        copyCodeBtn.textContent = 'Copied!';
-        setTimeout(() => {
-            copyCodeBtn.textContent = originalText;
-        }, 2000);
-    });
 }
 
 // Export calendar to PDF
