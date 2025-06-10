@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI SEO Content Refresh Calendar</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI SEO Content Refresh Calendar</h1>
+            <p class="subtitle">Optimize your content updates for AI search visibility</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="industry">Industry</label>
+                    <select id="industry" required>
+                        <option value="">Select your industry</option>
+                        <option value="tech">Technology</option>
+                        <option value="finance">Finance</option>
+                        <option value="health">Healthcare</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="education">Education</option>
+                        <option value="legal">Legal</option>
+                        <option value="architecture">Architecture</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <div id="otherIndustryInput" class="hidden">
+                        <input type="text" id="customIndustry" placeholder="Enter your industry">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cadence">Current Content Cadence</label>
+                    <select id="cadence" required>
+                        <option value="">Select your current cadence</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Bi-Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                    </select>
+                </div>
+
+                <button id="generateBtn" class="primary-button">Generate Calendar</button>
+            </div>
+
+            <div id="results" class="hidden">
+                <div class="recommendation-section">
+                    <h2>Recommendation</h2>
+                    <p id="recommendationText"></p>
+                    <button id="toggleTipsBtn" class="secondary-button">Toggle AI Tips</button>
+                    <div id="aiTips" class="hidden">
+                        <h3>AI SEO Insights</h3>
+                        <ul id="tipsList"></ul>
+                    </div>
+                </div>
+
+                <div class="calendar-section">
+                    <h2>Content Update Calendar</h2>
+                    <div id="calendar"></div>
+                </div>
+
+                <div class="export-section">
+                    <h2>Share Your Calendar</h2>
+                    <div class="code-block">
+                        <pre><code id="embedCode"></code></pre>
+                        <button id="copyCodeBtn" class="secondary-button">Copy Code</button>
+                    </div>
+                    <button id="exportPdfBtn" class="secondary-button">Export as PDF</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built for content creators optimizing for AI search visibility</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
